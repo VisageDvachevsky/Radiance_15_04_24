@@ -3,58 +3,83 @@ using UnityEngine.Events;
 
 public class StateMachine : MonoBehaviour
 {
-    public enum CardState
+    public enum GameState
     {
-        Initial,
-        QuestInProgress,
-        QuestCompleted,
-        NextCard
+        CardNotPressed,         // Карточка не нажата
+        CardPressed,            // Карточка нажата
+        MiniGameInProgress,     // Миниигра в процессе выполнения
+        MiniGameCompleted,      // Миниигра успешно завершена
+        NextCard                // Переход к следующей карточке
     }
 
-    public UnityEvent OnCardClicked;
-    public UnityEvent OnQuestInProgress;
-    public UnityEvent OnQuestCompleted;
-    public UnityEvent OnNextCard;
+    private GameState currentState;
 
-    private CardState currentState;
+    public UnityEvent OnMiniGameStart;
+    public UnityEvent OnMiniGameCompleted; 
 
     private void Start()
     {
-        currentState = CardState.Initial;
+        currentState = GameState.CardNotPressed;
     }
 
-    public void HandleCardClick()
+    private void Update()
     {
         switch (currentState)
         {
-            case CardState.Initial:
-                Debug.Log("Card clicked.");
-                OnCardClicked?.Invoke();
-                currentState = CardState.QuestInProgress;
+            case GameState.CardNotPressed:
+                CheckCardPress();
                 break;
-            case CardState.QuestInProgress:
-                Debug.Log("Quest in progress.");
-                OnQuestInProgress?.Invoke();
-                // Логика выполнения квеста
-                // После успешного выполнения квеста переходим к следующему состоянию
-                currentState = CardState.QuestCompleted;
+            case GameState.CardPressed:
+                CheckMiniGameStart();
                 break;
-            case CardState.QuestCompleted:
-                Debug.Log("Quest completed.");
-                OnQuestCompleted?.Invoke();
-                // Логика завершения квеста
-                // Переходим к состоянию для перехода к следующей карточке
-                currentState = CardState.NextCard;
+            case GameState.MiniGameInProgress:
+                CheckMiniGameCompletion();
                 break;
-            case CardState.NextCard:
-                Debug.Log("Moving to next card.");
-                OnNextCard?.Invoke();
-                // Логика для перехода к следующей карточке
-                // Переходим к начальному состоянию для нового цикла
-                currentState = CardState.Initial;
+            case GameState.MiniGameCompleted:
+                CheckNextCard();
                 break;
-            default:
+            case GameState.NextCard:
+                GoToNextCard();
                 break;
         }
+    }
+
+    private void CheckCardPress()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            currentState = GameState.CardPressed;
+        }
+    }
+
+    private void CheckMiniGameStart()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OnMiniGameStart.Invoke();
+            currentState = GameState.MiniGameInProgress;
+        }
+    }
+
+    private void CheckMiniGameCompletion()
+    {
+        if (/* Условие завершения миниигры */true)
+        {
+            OnMiniGameCompleted.Invoke();
+            currentState = GameState.MiniGameCompleted;
+        }
+    }
+
+    private void CheckNextCard()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GoToNextCard();
+        }
+    }
+
+    private void GoToNextCard()
+    {
+        currentState = GameState.CardNotPressed;
     }
 }
