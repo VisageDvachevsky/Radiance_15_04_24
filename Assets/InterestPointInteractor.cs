@@ -7,6 +7,39 @@ public class InterestPointInteractor : MonoBehaviour
 {
     QuestionData questionData;
 
+    private void Start()
+    {
+        questionData = new QuestionData
+        {
+            Theme = "Тема вопроса 1",
+            Questions = new List<QuestionData.Question>
+            {
+                new QuestionData.Question
+                {
+                    QuestionText = "Текст вопроса 1?",
+                    AnswerIndex = new Dictionary<int, string>
+                    {
+                        { 1, "Ответ 1" },
+                        { 2, "Ответ 2" },
+                        { 3, "Ответ 3" }
+                    },
+                    CorrectAnswer = 1
+                },
+                new QuestionData.Question
+                {
+                    QuestionText = "Текст вопроса 2?",
+                    AnswerIndex = new Dictionary<int, string>
+                    {
+                        { 1, "Ответ 1" },
+                        { 2, "Ответ 2" },
+                        { 3, "Ответ 3" }
+                    },
+                    CorrectAnswer = 2
+                }
+            }
+        };
+    }
+
     private void Update()
     {
         RuntimePlatform platform = Application.platform;
