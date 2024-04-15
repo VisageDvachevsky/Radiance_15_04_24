@@ -17,7 +17,6 @@ public class ARPlacement : MonoBehaviour
         aRRaycastManager = FindObjectOfType<ARRaycastManager>();
     }
 
-    // need to update placement indicator, placement pose and spawn 
     void Update()
     {
         UpdatePlacementPose();

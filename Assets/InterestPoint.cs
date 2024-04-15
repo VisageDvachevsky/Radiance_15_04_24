@@ -2,13 +2,11 @@ using UnityEngine;
 
 public class InterestPoint : MonoBehaviour
 {
-    [TextArea]
-    [SerializeField] private string _headerText;
-    [TextArea]
-    [SerializeField] private string _mainText;
+    [SerializeField] private QuestWindow questWindow;
+    public string ThemeName;
 
-    public void Invoke()
+    public void Invoke(QuestionInfo themeData)
     {
-        InfoWindow.Open(_headerText, _mainText);
+        questWindow.Open(themeData);
     }
 }

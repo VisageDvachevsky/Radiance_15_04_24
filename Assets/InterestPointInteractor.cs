@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 
 public class InterestPointInteractor : MonoBehaviour
 {
+    QuestionData questionData;
+
     private void Update()
     {
         RuntimePlatform platform = Application.platform;
@@ -37,7 +39,13 @@ public class InterestPointInteractor : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit))
         {
-            hit.transform.GetComponent<InterestPoint>()?.Invoke();
+            var _InterestPoint = hit.transform.GetComponent<InterestPoint>();
+
+            if (_InterestPoint != null)
+            {
+                QuestionInfo questionInfo = questionData.GetQuestionInfoByTheme(_InterestPoint.ThemeName);
+                _InterestPoint.Invoke(questionInfo);
+            }
         }
     }
 }
