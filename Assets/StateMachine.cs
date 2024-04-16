@@ -1,21 +1,22 @@
 using UnityEngine;
-using UnityEngine.Events;
+using System;
 
 public class StateMachine : MonoBehaviour
 {
     public enum GameState
     {
-        CardNotPressed,         // Карточка не нажата
-        CardPressed,            // Карточка нажата
-        MiniGameInProgress,     // Миниигра в процессе выполнения
-        MiniGameCompleted,      // Миниигра успешно завершена
-        NextCard                // Переход к следующей карточке
+        CardNotPressed,     // Карточка не нажата
+        MiniGameStarted,    // Миниигра началась
+        MiniGameCompleted,  // Миниигра завершена
+        NextCard            // Переход к начальному состоянию
     }
 
     private GameState currentState;
 
-    public UnityEvent OnMiniGameStart;
-    public UnityEvent OnMiniGameCompleted; 
+    public event Action OnCardNotPressedEnter;
+    public event Action OnMiniGameStartedEnter;
+    public event Action OnMiniGameCompletedEnter;
+    public event Action OnNextCardEnter;
 
     private void Start()
     {
@@ -29,57 +30,46 @@ public class StateMachine : MonoBehaviour
             case GameState.CardNotPressed:
                 CheckCardPress();
                 break;
-            case GameState.CardPressed:
-                CheckMiniGameStart();
-                break;
-            case GameState.MiniGameInProgress:
-                CheckMiniGameCompletion();
+            case GameState.MiniGameStarted:
                 break;
             case GameState.MiniGameCompleted:
-                CheckNextCard();
+                GoToNextCard();
                 break;
             case GameState.NextCard:
-                GoToNextCard();
+                ResetGame();
                 break;
         }
     }
 
     private void CheckCardPress()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            currentState = GameState.CardPressed;
-        }
+        currentState = GameState.MiniGameStarted;
+        OnMiniGameStartedEnter?.Invoke();
     }
 
-    private void CheckMiniGameStart()
+    public void MiniGameCompleted()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            OnMiniGameStart.Invoke();
-            currentState = GameState.MiniGameInProgress;
-        }
-    }
-
-    private void CheckMiniGameCompletion()
-    {
-        if (/* Условие завершения миниигры */true)
-        {
-            OnMiniGameCompleted.Invoke();
-            currentState = GameState.MiniGameCompleted;
-        }
-    }
-
-    private void CheckNextCard()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            GoToNextCard();
-        }
+        currentState = GameState.MiniGameCompleted;
+        OnMiniGameCompletedEnter?.Invoke();
     }
 
     private void GoToNextCard()
     {
+        // К начальному состоянию
+        currentState = GameState.NextCard;
+        OnNextCardEnter?.Invoke();
+    }
+
+    private void ResetGame()
+    {
+        // Карточка не нажата
         currentState = GameState.CardNotPressed;
+        OnCardNotPressedEnter?.Invoke();
+    }
+
+    public void StartMiniGame()
+    {
+        currentState = GameState.MiniGameStarted;
+        OnMiniGameStartedEnter?.Invoke();
     }
 }
