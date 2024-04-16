@@ -2,16 +2,22 @@ using UnityEngine;
 
 public class InterestPoint : MonoBehaviour
 {
-    [SerializeField] private QuestWindow questWindow;
     public string ThemeName;
+
+    private QuestWindow _qWindow;
 
     public void Invoke(QuestionInfo themeData)
     {
-        questWindow.Open(themeData);
+        GetQuestWindow().Open(themeData);
     }
 
-    private void Update()
+    private QuestWindow GetQuestWindow()
     {
-        questWindow = GameObject.FindGameObjectWithTag("InfoWindow").GetComponent<QuestWindow>();
+        if (_qWindow == null)
+        {
+            _qWindow = GameObject.FindGameObjectWithTag("InfoWindow").GetComponent<QuestWindow>();
+        }
+
+        return _qWindow;
     }
 }
