@@ -7,7 +7,8 @@ public class ScoreSystem : MonoBehaviour
 
     private int score = 0;
 
-    public UnityEvent OnScoreChanged;
+    public class ScoreChangeEvent : UnityEvent<int, int> { }
+    public ScoreChangeEvent OnScoreChanged = new ScoreChangeEvent();
 
     void Awake()
     {
@@ -26,17 +27,19 @@ public class ScoreSystem : MonoBehaviour
     public void IncrementScore(int points)
     {
         score += points;
-        OnScoreChanged?.Invoke();
+        OnScoreChanged?.Invoke(score, points);
     }
 
     public void DecrementScore(int points)
     {
+        int last = score;
+
         score -= points;
         if (score < 0)
         {
             score = 0;
         }
-        OnScoreChanged?.Invoke();
+        OnScoreChanged?.Invoke(score, score - last);
     }
 
     public int GetScore()

@@ -15,7 +15,7 @@ public class ScoreCounter : MonoBehaviour
     {
         _scoreSystem = ScoreSystem.Instance;
         _scoreSystem.OnScoreChanged.AddListener(HandleScoreChange);
-        HandleScoreChange();
+        HandleScoreChange(0,0);
 
         //if (ScoreSystem.Instance != null)
         //{
@@ -38,7 +38,7 @@ public class ScoreCounter : MonoBehaviour
         _scoreSystem.OnScoreChanged.RemoveListener(HandleScoreChange);
     }
 
-    private void HandleScoreChange()
+    private void HandleScoreChange(int newScore, int delta)
     {
         scoreText.text = $"Ñ÷¸ò: {_scoreSystem.GetScore()}";
     }
