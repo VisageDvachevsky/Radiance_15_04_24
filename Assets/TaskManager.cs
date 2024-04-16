@@ -15,8 +15,9 @@ public class TaskManager : MonoBehaviour
             taskButtons[i].interactable = false;
         }
 
-        stateMachine.OnMiniGameCompleted.AddListener(CompleteTask);
+        stateMachine.OnMiniGameCompletedEnter += CompleteTask;
     }
+
 
     private void CompleteTask()
     {
