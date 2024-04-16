@@ -36,7 +36,7 @@ public class TaskManager : MonoBehaviour
         {
             taskButtons[currentTaskIndex].interactable = true;
             UpdateImage();
-            scoreSystem.IncrementScore(10);
+            scoreSystem.IncrementScore(25);
         }
     }
 

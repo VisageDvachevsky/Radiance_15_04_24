@@ -126,6 +126,8 @@ public class QuestWindow : MonoBehaviour
         }
         else
         {
+            ScoreSystem.Instance.DecrementScore(10);
+
             foreach (Transform child in _answerOptionsContainer.transform)
             {
                 QuizToggle t = child.GetComponent<QuizToggle>();
@@ -171,6 +173,8 @@ public class QuestWindow : MonoBehaviour
 
     public void Close()
     {
+        if (!_isOpened) return;
+
         _isOpened = false;
 
         foreach (Transform child in _answerOptionsContainer.transform)

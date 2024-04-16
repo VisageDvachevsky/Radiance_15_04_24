@@ -1,16 +1,19 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ScoreSystem : MonoBehaviour
 {
-    public static ScoreSystem instance;
+    public static ScoreSystem Instance;
 
     private int score = 0;
 
+    public UnityEvent OnScoreChanged;
+
     void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
 
             DontDestroyOnLoad(gameObject);
         }
@@ -23,6 +26,7 @@ public class ScoreSystem : MonoBehaviour
     public void IncrementScore(int points)
     {
         score += points;
+        OnScoreChanged?.Invoke();
     }
 
     public void DecrementScore(int points)
@@ -32,6 +36,7 @@ public class ScoreSystem : MonoBehaviour
         {
             score = 0;
         }
+        OnScoreChanged?.Invoke();
     }
 
     public int GetScore()

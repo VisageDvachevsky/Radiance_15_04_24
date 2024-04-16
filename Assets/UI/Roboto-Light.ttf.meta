@@ -4,7 +4,7 @@ TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
   fontSize: 16
-  forceTextureCase: -2
+  forceTextureCase: -1
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
@@ -15,6 +15,7 @@ TrueTypeFontImporter:
   - {fileID: 12800000, guid: b2ea3b3f1765e544b9eb5bd1a93a91ce, type: 3}
   - {fileID: 12800000, guid: dfb97a9307a577a41bcacba34b9a7e32, type: 3}
   - {fileID: 12800000, guid: a51a3aebb43ac044989270407476b208, type: 3}
+  - {fileID: 12800000, guid: f29ecadcdaf3a0f4c807d02b02db3393, type: 3}
   - {fileID: 12800000, guid: 3750c318f40cab44a97d3a81beaefeb3, type: 3}
   - {fileID: 12800000, guid: f95147a9bab9fe649b8070170fa7ebd2, type: 3}
   - {fileID: 12800000, guid: 30dc370b164eefc43b95744fc796dad0, type: 3}

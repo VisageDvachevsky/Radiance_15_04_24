@@ -389,7 +389,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d00148e409f1f34280e0c5698e417a1, type: 3}
   m_PrefabInstance: {fileID: 6285062144843314977}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &4919602578352735550
+--- !u!64 &8730617820569030651
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

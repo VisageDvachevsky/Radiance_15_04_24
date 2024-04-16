@@ -9,5 +9,8 @@ public class MenuController : MonoBehaviour
     {
         isMenuOpen = !isMenuOpen;
         menuAnimator.SetBool("isMenuOpen", isMenuOpen);
+
+        //TODO: Осуждаю такое но времени нет
+        QuestWindow.GetInstance().Close();
     }
 }

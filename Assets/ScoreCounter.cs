@@ -1,34 +1,50 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using TMPro;
+using System;
 
 public class ScoreCounter : MonoBehaviour
 {
-    public Text scoreText;
+    public TextMeshProUGUI scoreText;
     [SerializeField] private ScoreSender _scoreSender;
+
+    private ScoreSystem _scoreSystem;
 
     void Start()
     {
-        if (ScoreSystem.instance != null)
-        {
+        _scoreSystem = ScoreSystem.Instance;
+        _scoreSystem.OnScoreChanged.AddListener(HandleScoreChange);
+        HandleScoreChange();
 
-            int targetScore = ScoreSystem.instance.GetScore();
-            Debug.Log("Target Score: " + targetScore);
+        //if (ScoreSystem.Instance != null)
+        //{
 
-            AnimateScore(targetScore);
+        //    int targetScore = ScoreSystem.Instance.GetScore();
+        //    Debug.Log("Target Score: " + targetScore);
 
-            _scoreSender.SendScore(targetScore);
-        }
-        else
-        {
-            Debug.LogError("ScoreSystem instance not found!");
-        }
+        //    AnimateScore(targetScore);
+
+        //    //_scoreSender.SendScore(targetScore);
+        //}
+        //else
+        //{
+        //    Debug.LogError("ScoreSystem instance not found!");
+        //}
     }
 
+    private void OnDestroy()
+    {
+        _scoreSystem.OnScoreChanged.RemoveListener(HandleScoreChange);
+    }
+
+    private void HandleScoreChange()
+    {
+        scoreText.text = $"Ñ÷¸ò: {_scoreSystem.GetScore()}";
+    }
 
     void AnimateScore(int targetScore)
     {
-
         StartCoroutine(AnimateScoreCoroutine(targetScore));
     }
 
