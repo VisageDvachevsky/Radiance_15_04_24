@@ -12,30 +12,36 @@ public class QuestWindow : MonoBehaviour
     [SerializeField] private RectTransform _windowTransform;
     [SerializeField] private TextMeshProUGUI _header;
     [SerializeField] private TextMeshProUGUI _mainText;
-    [SerializeField] private Transform _answerOptionsContainer;
+    [SerializeField] private ToggleGroup _answerOptionsContainer;
+    [SerializeField] private QuizToggle _togglePrefab;
     [SerializeField] private TextMeshProUGUI _answerResultText;
     [SerializeField] private float _animationSmoothness = 10f;
-
-    private bool _isOpened = false;
-    private QuestionInfo _currentQuestionInfo;
-
-    public StateMachine _stateMachine;
-
-    public event Action OnQuestCompleted;
-
     [SerializeField] private TextMeshProUGUI _explanationText; 
     [SerializeField] private float _explanationAnimationSpeed = 1f; 
     [SerializeField] private RectTransform _explanationTransform;
 
+    private StateMachine _stateMachine;
+    private bool _isOpened = false;
+    private QuestionInfo _currentQuestionInfo;
+
+
+    public event Action OnQuestCompleted;
+
+
     private bool _isExplanationShown = false;
 
-    private void Start()
+    private void Awake()
     {
         if (_instance)
         {
             throw new Exception("More than one QuestWindow instance in scene!");
         }
         _instance = this;
+    }
+
+    private void Start()
+    {
+        _stateMachine = StateMachine.Instance;
 
         _windowTransform.localScale = Vector3.zero;
 
@@ -54,19 +60,25 @@ public class QuestWindow : MonoBehaviour
         }
     }
 
+    public static QuestWindow GetInstance()
+    {
+        return _instance;
+    }
+
     public void Open(QuestionInfo questionInfo)
     {
         _stateMachine.StartMiniGame();
 
         _currentQuestionInfo = questionInfo;
 
-        _header.text = _currentQuestionInfo.Theme;
-        _mainText.text = _currentQuestionInfo.QuestionText;
+        _header.text = _currentQuestionInfo.Theme.VisibleName;
+        _mainText.text = _currentQuestionInfo.QuestionTitle;
 
-        foreach (var option in _currentQuestionInfo.AnswerIndex)
+        for (int i = 0; i < _currentQuestionInfo.Options.Length; i++)
         {
-            CreateAnswerOption(option.Key, option.Value);
+            CreateAnswerOption(i, _currentQuestionInfo.Options[i]);
         }
+        _answerOptionsContainer.SetAllTogglesOff();
 
         _isOpened = true;
     }
@@ -74,17 +86,9 @@ public class QuestWindow : MonoBehaviour
 
     private void CreateAnswerOption(int index, string answerText)
     {
-        GameObject radioButtonGO = new GameObject("RadioButton" + index);
-        radioButtonGO.transform.SetParent(_answerOptionsContainer);
-        Toggle toggle = radioButtonGO.AddComponent<Toggle>();
-
-        TextMeshProUGUI optionText = radioButtonGO.AddComponent<TextMeshProUGUI>();
-        optionText.text = answerText;
-        optionText.fontSize = 14;
-        optionText.alignment = TextAlignmentOptions.Left;
-        optionText.rectTransform.sizeDelta = new Vector2(300, 30);
-
-        toggle.group = _answerOptionsContainer.GetComponent<ToggleGroup>();
+        QuizToggle toggle = Instantiate(_togglePrefab, _answerOptionsContainer.transform);
+        toggle.name = "RadioButton" + index;
+        toggle.Init(_answerOptionsContainer, answerText);
     }
 
     public void SubmitAnswer()
@@ -94,17 +98,17 @@ public class QuestWindow : MonoBehaviour
         if (selectedToggle != null)
         {
             int selectedAnswer = int.Parse(selectedToggle.name.Replace("RadioButton", ""));
-            if (_currentQuestionInfo.AnswerIndex.ContainsKey(selectedAnswer) && selectedAnswer == _currentQuestionInfo.CorrectAnswer)
+            if (_currentQuestionInfo.CorrectIndex == selectedAnswer)
             {
                 Debug.Log("Quest completed.");
-                OnQuestCompleted?.Invoke();
-                _stateMachine.MiniGameCompleted();
+                //OnQuestCompleted?.Invoke();
+                //_stateMachine.MiniGameCompleted();
 
                 ShowExplanation(); 
             }
         }
 
-        _answerOptionsContainer.GetComponent<ToggleGroup>().SetAllTogglesOff();
+        _answerOptionsContainer.SetAllTogglesOff();
     }
 
     private void ShowExplanation()
@@ -112,6 +116,8 @@ public class QuestWindow : MonoBehaviour
         if (!_isExplanationShown)
         {
             _isExplanationShown = true;
+            _explanationText.text = _currentQuestionInfo.Explanation;
+
             StartCoroutine(AnimateExplanation(true));
         }
     }
@@ -135,7 +141,7 @@ public class QuestWindow : MonoBehaviour
     {
         _isOpened = false;
 
-        foreach (Transform child in _answerOptionsContainer)
+        foreach (Transform child in _answerOptionsContainer.transform)
         {
             Destroy(child.gameObject);
         }

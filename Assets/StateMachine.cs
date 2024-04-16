@@ -11,12 +11,24 @@ public class StateMachine : MonoBehaviour
         NextCard            // Переход к начальному состоянию
     }
 
+    public static StateMachine Instance { get; private set; }
+
     private GameState currentState;
 
     public event Action OnCardNotPressedEnter;
     public event Action OnMiniGameStartedEnter;
     public event Action OnMiniGameCompletedEnter;
     public event Action OnNextCardEnter;
+
+    // Синглтон - бан, синглтон в Start() - расстрел, затем бан
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            throw new Exception($"More than one instance of {GetType().Name} on scene");
+        }
+        Instance = this;
+    }
 
     private void Start()
     {
