@@ -4,7 +4,8 @@ using UnityEngine.UI;
 
 public class ScoreCounter : MonoBehaviour
 {
-    public Text scoreText; 
+    public Text scoreText;
+    [SerializeField] private ScoreSender _scoreSender;
 
     void Start()
     {
@@ -15,6 +16,8 @@ public class ScoreCounter : MonoBehaviour
             Debug.Log("Target Score: " + targetScore);
 
             AnimateScore(targetScore);
+
+            _scoreSender.SendScore(targetScore);
         }
         else
         {
