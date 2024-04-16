@@ -101,6 +101,7 @@ public class QuestWindow : MonoBehaviour
             if (_currentQuestionInfo.CorrectIndex == selectedAnswer)
             {
                 Debug.Log("Quest completed.");
+                // TODO: fix that shit
                 //OnQuestCompleted?.Invoke();
                 //_stateMachine.MiniGameCompleted();
 
