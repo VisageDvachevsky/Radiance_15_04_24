@@ -4,7 +4,8 @@ using UnityEngine.UI;
 public class TaskManager : MonoBehaviour
 {
     public StateMachine stateMachine;
-    public Button[] taskButtons; 
+    public Button[] taskButtons;
+    public ScoreSystem scoreSystem;
 
     private int currentTaskIndex = 0;
 
@@ -27,6 +28,7 @@ public class TaskManager : MonoBehaviour
         if (currentTaskIndex < taskButtons.Length)
         {
             taskButtons[currentTaskIndex].interactable = true;
+            scoreSystem.IncrementScore(10);
         }
     }
 }
