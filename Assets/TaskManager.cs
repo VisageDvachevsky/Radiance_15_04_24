@@ -3,30 +3,34 @@ using UnityEngine.UI;
 
 public class TaskManager : MonoBehaviour
 {
-    public StateMachine stateMachine;
     public Button[] taskButtons;
     public Image spriteRenderer;
     public Sprite[] sprites;
     public ScoreSystem scoreSystem;
 
+    private CompletedQuestions _completedQuestions;
     private int currentTaskIndex = 0;
 
     private void Start()
     {
+        _completedQuestions = CompletedQuestions.Instance;
+
         for (int i = 1; i < taskButtons.Length; i++)
         {
             taskButtons[i].interactable = false;
         }
         UpdateImage();
 
-        stateMachine.OnMiniGameCompletedEnter += CompleteTask;
+        _completedQuestions.OnQuestionCompleted.AddListener(CompleteTask);
     }
 
-
-    private void CompleteTask()
+    private void OnDestroy()
     {
-        stateMachine.MiniGameCompleted();
+        _completedQuestions.OnQuestionCompleted.RemoveListener(CompleteTask);
+    }
 
+    private void CompleteTask(QuestionInfo _)
+    {
         currentTaskIndex++;
         if (currentTaskIndex < taskButtons.Length)
         {

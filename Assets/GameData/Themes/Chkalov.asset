@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d49adebb2a0ca104cb096b8b3661c4ee, type: 3}
   m_Name: Chkalov
   m_EditorClassIdentifier: 
-  <VisibleName>k__BackingField: "\u0427\u043A\u0430\u043B\u043E\u0432"
+  <VisibleName>k__BackingField: "\u0427\u043A\u0430\u043B\u043E\u0432\u0441\u043A\u0430\u044F
+    \u043B\u0435\u0441\u0442\u043D\u0438\u0446\u0430"

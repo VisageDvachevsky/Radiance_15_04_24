@@ -4,6 +4,7 @@ using System.Collections;
 using TMPro;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 public class QuestWindow : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class QuestWindow : MonoBehaviour
     [SerializeField] private RectTransform _windowTransform;
     [SerializeField] private TextMeshProUGUI _header;
     [SerializeField] private TextMeshProUGUI _mainText;
-    [SerializeField] private ToggleGroup _answerOptionsContainer;
+    [SerializeField] private Transform _answerOptionsContainer;
     [SerializeField] private QuizToggle _togglePrefab;
     [SerializeField] private TextMeshProUGUI _answerResultText;
     [SerializeField] private float _animationSmoothness = 10f;
@@ -21,6 +22,7 @@ public class QuestWindow : MonoBehaviour
     [SerializeField] private RectTransform _explanationTransform;
 
     private StateMachine _stateMachine;
+    private CompletedQuestions _completedQuestions;
     private bool _isOpened = false;
     private QuestionInfo _currentQuestionInfo;
 
@@ -42,6 +44,7 @@ public class QuestWindow : MonoBehaviour
     private void Start()
     {
         _stateMachine = StateMachine.Instance;
+        _completedQuestions = CompletedQuestions.Instance;
 
         _windowTransform.localScale = Vector3.zero;
 
@@ -67,18 +70,27 @@ public class QuestWindow : MonoBehaviour
 
     public void Open(QuestionInfo questionInfo)
     {
+        if (_isOpened) return;
+
         _stateMachine.StartMiniGame();
 
         _currentQuestionInfo = questionInfo;
 
         _header.text = _currentQuestionInfo.Theme.VisibleName;
         _mainText.text = _currentQuestionInfo.QuestionTitle;
+        _explanationTransform.localScale = Vector3.zero;
+        _isExplanationShown = false;
 
+        List<KeyValuePair<int, string>> options = new List<KeyValuePair<int, string>>();
         for (int i = 0; i < _currentQuestionInfo.Options.Length; i++)
+            options.Add(new KeyValuePair<int, string>(i, _currentQuestionInfo.Options[i]));
+        options.Shuffle();
+
+
+        foreach (KeyValuePair<int, string> option in options)
         {
-            CreateAnswerOption(i, _currentQuestionInfo.Options[i]);
+            CreateAnswerOption(option.Key, option.Value);
         }
-        _answerOptionsContainer.SetAllTogglesOff();
 
         _isOpened = true;
     }
@@ -87,29 +99,45 @@ public class QuestWindow : MonoBehaviour
     private void CreateAnswerOption(int index, string answerText)
     {
         QuizToggle toggle = Instantiate(_togglePrefab, _answerOptionsContainer.transform);
-        toggle.name = "RadioButton" + index;
-        toggle.Init(_answerOptionsContainer, answerText);
+        toggle.Init(answerText, index);
+        toggle.OnClick.AddListener(SubmitAnswer);
     }
 
-    public void SubmitAnswer()
+    public void SubmitAnswer(QuizToggle toggle)
     {
-        Toggle selectedToggle = _answerOptionsContainer.GetComponent<ToggleGroup>().ActiveToggles().FirstOrDefault();
+        int selected = toggle.Index;
+        int correct = _currentQuestionInfo.CorrectIndex;
 
-        if (selectedToggle != null)
+        if (selected == correct)
         {
-            int selectedAnswer = int.Parse(selectedToggle.name.Replace("RadioButton", ""));
-            if (_currentQuestionInfo.CorrectIndex == selectedAnswer)
-            {
-                Debug.Log("Quest completed.");
-                OnQuestCompleted?.Invoke();
-                _stateMachine.MiniGameCompleted();
+            OnQuestCompleted?.Invoke();
+            
+            _stateMachine.MiniGameCompleted();
+            _completedQuestions.Complete(_currentQuestionInfo);
 
-                _answerOptionsContainer.gameObject.SetActive(false);
-                ShowExplanation();
+            foreach (Transform child in _answerOptionsContainer.transform)
+            {
+                QuizToggle t = child.GetComponent<QuizToggle>();
+                t.DisableInteract();
+
+                if (t == toggle) t.SetOk();
+                else t.SetBlank();
+            }
+        }
+        else
+        {
+            foreach (Transform child in _answerOptionsContainer.transform)
+            {
+                QuizToggle t = child.GetComponent<QuizToggle>();
+                t.DisableInteract();
+
+                if (t == toggle) t.SetWrong();
+                else if (t.Index == correct) t.SetNotButOk();
+                else t.SetBlank();
             }
         }
 
-        _answerOptionsContainer.SetAllTogglesOff();
+        ShowExplanation();
     }
 
 
@@ -119,8 +147,6 @@ public class QuestWindow : MonoBehaviour
         {
             _isExplanationShown = true;
             _explanationText.text = _currentQuestionInfo.Explanation;
-
-            _explanationTransform.anchoredPosition = _answerOptionsContainer.GetComponent<RectTransform>().anchoredPosition;
 
             StartCoroutine(AnimateExplanation(true));
         }
@@ -149,6 +175,7 @@ public class QuestWindow : MonoBehaviour
 
         foreach (Transform child in _answerOptionsContainer.transform)
         {
+            child.GetComponent<QuizToggle>().OnClick.RemoveAllListeners();
             Destroy(child.gameObject);
         }
     }
