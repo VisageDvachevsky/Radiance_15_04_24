@@ -101,16 +101,17 @@ public class QuestWindow : MonoBehaviour
             if (_currentQuestionInfo.CorrectIndex == selectedAnswer)
             {
                 Debug.Log("Quest completed.");
-                // TODO: fix that shit
-                //OnQuestCompleted?.Invoke();
-                //_stateMachine.MiniGameCompleted();
+                OnQuestCompleted?.Invoke();
+                _stateMachine.MiniGameCompleted();
 
-                ShowExplanation(); 
+                _answerOptionsContainer.gameObject.SetActive(false);
+                ShowExplanation();
             }
         }
 
         _answerOptionsContainer.SetAllTogglesOff();
     }
+
 
     private void ShowExplanation()
     {
@@ -119,9 +120,12 @@ public class QuestWindow : MonoBehaviour
             _isExplanationShown = true;
             _explanationText.text = _currentQuestionInfo.Explanation;
 
+            _explanationTransform.anchoredPosition = _answerOptionsContainer.GetComponent<RectTransform>().anchoredPosition;
+
             StartCoroutine(AnimateExplanation(true));
         }
     }
+
 
     private IEnumerator AnimateExplanation(bool show)
     {
@@ -137,6 +141,7 @@ public class QuestWindow : MonoBehaviour
 
         _explanationTransform.localScale = targetScale;
     }
+
 
     public void Close()
     {

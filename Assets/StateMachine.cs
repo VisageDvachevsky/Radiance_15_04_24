@@ -1,3 +1,53 @@
+//using UnityEngine;
+
+//public class StateMachine : MonoBehaviour
+//{
+//    private struct State
+//    {
+//        public bool state1;
+//        public bool state2;
+//        public bool state3;
+//        public bool state4;
+//    }
+
+//    private State currentState;
+
+//    private void Start()
+//    {
+//        currentState.state1 = false;
+//        currentState.state2 = false;
+//        currentState.state3 = false;
+//        currentState.state4 = false;
+//    }
+
+//    public void ToggleState1()
+//    {
+//        currentState.state1 = !currentState.state1;
+//        Debug.Log("State 1 new state: " + currentState.state1);
+//    }
+
+//    public void ToggleState2()
+//    {
+//        currentState.state2 = !currentState.state2;
+//        Debug.Log("State 2 new state: " + currentState.state2);
+//    }
+
+//    public void ToggleState3()
+//    {
+//        currentState.state3 = !currentState.state3;
+//        Debug.Log("State 3 new state: " + currentState.state3);
+//    }
+
+//    public void ToggleState4()
+//    {
+//        currentState.state4 = !currentState.state4;
+//        Debug.Log("State 4 new state: " + currentState.state4);
+//    }
+//}
+
+
+
+
 using UnityEngine;
 using System;
 
@@ -61,9 +111,13 @@ public class StateMachine : MonoBehaviour
 
     public void MiniGameCompleted()
     {
-        currentState = GameState.MiniGameCompleted;
-        OnMiniGameCompletedEnter?.Invoke();
+        if (currentState != GameState.MiniGameCompleted)
+        {
+            currentState = GameState.MiniGameCompleted;
+            OnMiniGameCompletedEnter?.Invoke();
+        }
     }
+
 
     private void GoToNextCard()
     {
@@ -85,4 +139,3 @@ public class StateMachine : MonoBehaviour
         OnMiniGameStartedEnter?.Invoke();
     }
 }
-
