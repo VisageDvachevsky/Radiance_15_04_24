@@ -9,4 +9,9 @@ public class InterestPoint : MonoBehaviour
     {
         questWindow.Open(themeData);
     }
+
+    private void Update()
+    {
+        questWindow = GameObject.FindGameObjectWithTag("InfoWindow").GetComponent<QuestWindow>();
+    }
 }

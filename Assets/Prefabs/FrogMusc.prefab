@@ -89,6 +89,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 8974961995026164077}
     m_Modifications:
     - target: {fileID: 629792639572722186, guid: 79424f8c7d3dae44db36994c36bf81f6, type: 3}
+      propertyPath: ThemeName
+      value: Chkalov
+      objectReference: {fileID: 0}
+    - target: {fileID: 629792639572722186, guid: 79424f8c7d3dae44db36994c36bf81f6, type: 3}
       propertyPath: _mainText
       value: "\u041C\u044B\u0448\u0446\u044B, \u043E\u0442\u043D\u043E\u0441\u044F\u0449\u0438\u0435\u0441\u044F
         \u043A \u043E\u0431\u043B\u0430\u0441\u0442\u0438 \u0436\u0438\u0432\u043E\u0442\u0430

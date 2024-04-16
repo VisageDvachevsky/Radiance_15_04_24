@@ -13,7 +13,6 @@ public class QuestWindow : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _header;
     [SerializeField] private TextMeshProUGUI _mainText;
     [SerializeField] private Transform _answerOptionsContainer;
-    [SerializeField] private Button _submitButton;
     [SerializeField] private TextMeshProUGUI _answerResultText;
     [SerializeField] private float _animationSmoothness = 10f;
 
