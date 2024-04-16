@@ -5,6 +5,8 @@ public class TaskManager : MonoBehaviour
 {
     public StateMachine stateMachine;
     public Button[] taskButtons;
+    public Image spriteRenderer;
+    public Sprite[] sprites;
     public ScoreSystem scoreSystem;
 
     private int currentTaskIndex = 0;
@@ -15,6 +17,7 @@ public class TaskManager : MonoBehaviour
         {
             taskButtons[i].interactable = false;
         }
+        UpdateImage();
 
         stateMachine.OnMiniGameCompletedEnter += CompleteTask;
     }
@@ -28,7 +31,13 @@ public class TaskManager : MonoBehaviour
         if (currentTaskIndex < taskButtons.Length)
         {
             taskButtons[currentTaskIndex].interactable = true;
+            UpdateImage();
             scoreSystem.IncrementScore(10);
         }
+    }
+
+    private void UpdateImage()
+    {
+        spriteRenderer.sprite = sprites[currentTaskIndex + 1];
     }
 }

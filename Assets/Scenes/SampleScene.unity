@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2349,7 +2349,6 @@ MonoBehaviour:
   _header: {fileID: 69311794}
   _mainText: {fileID: 1266426616}
   _answerOptionsContainer: {fileID: 0}
-  _submitButton: {fileID: 0}
   _answerResultText: {fileID: 0}
   _animationSmoothness: 20
   _stateMachine: {fileID: 0}
@@ -2772,7 +2771,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2081512638
 Transform:
@@ -2830,13 +2829,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateMachine: {fileID: 2081512642}
   taskButtons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  scoreSystem: {fileID: 0}
+  - {fileID: 885735495}
+  - {fileID: 1021230758}
+  - {fileID: 1186026124}
+  - {fileID: 1920140308}
+  spriteRenderer: {fileID: 1881036683}
+  sprites:
+  - {fileID: 21300000, guid: c03630ab184a05646b2a2f8663a847f2, type: 3}
+  - {fileID: 21300000, guid: 972bf9ec2f758464792578e94ac6acb3, type: 3}
+  - {fileID: 21300000, guid: 945509bfa4a5af44399afd40a01ecb24, type: 3}
+  - {fileID: 21300000, guid: 9f45984fd34be844fabfdb759e2a735f, type: 3}
+  - {fileID: 21300000, guid: 308a7a56c28d3e4408f8b2e41df9cd71, type: 3}
+  scoreSystem: {fileID: 2081512639}
 --- !u!114 &2081512642
 MonoBehaviour:
   m_ObjectHideFlags: 0
