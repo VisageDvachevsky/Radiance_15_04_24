@@ -13,6 +13,10 @@ public class QuizToggle : MonoBehaviour
     public Button button;
     public Image imgRenderer;
     public TextMeshProUGUI label;
+    public GameObject imgLabelContainer;
+    public Image imgLabel;
+    public int textHeight;
+    public int imageHeight;
 
     public class ToggleClickHandler : UnityEvent<QuizToggle> { }
     public ToggleClickHandler OnClick = new ToggleClickHandler();
@@ -33,6 +37,20 @@ public class QuizToggle : MonoBehaviour
     {
         Index = index;
         label.text = text;
+        label.gameObject.SetActive(true);
+        imgLabelContainer.SetActive(false);
+        RectTransform rt = transform.GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(rt.sizeDelta.x, textHeight);
+    }
+
+    public void Init(Sprite sprite, int index)
+    {
+        Index = index;
+        imgLabel.sprite = sprite;
+        label.gameObject.SetActive(false);
+        imgLabelContainer.SetActive(true);
+        RectTransform rt = transform.GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(rt.sizeDelta.x, imageHeight);
     }
 
     public void SetOk()

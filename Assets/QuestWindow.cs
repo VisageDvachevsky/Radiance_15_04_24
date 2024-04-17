@@ -14,12 +14,15 @@ public class QuestWindow : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _header;
     [SerializeField] private TextMeshProUGUI _mainText;
     [SerializeField] private Transform _answerOptionsContainer;
+    [SerializeField] private GridLayoutGroup _gridLayoutGroup;
     [SerializeField] private QuizToggle _togglePrefab;
     [SerializeField] private TextMeshProUGUI _answerResultText;
     [SerializeField] private float _animationSmoothness = 10f;
     [SerializeField] private TextMeshProUGUI _explanationText; 
     [SerializeField] private float _explanationAnimationSpeed = 1f; 
     [SerializeField] private RectTransform _explanationTransform;
+    [SerializeField] private Vector2 _sizeText;
+    [SerializeField] private Vector2 _sizeSprite;
 
     private StateMachine _stateMachine;
     private CompletedQuestions _completedQuestions;
@@ -81,16 +84,34 @@ public class QuestWindow : MonoBehaviour
         _explanationTransform.localScale = Vector3.zero;
         _isExplanationShown = false;
 
-        List<KeyValuePair<int, string>> options = new List<KeyValuePair<int, string>>();
-        for (int i = 0; i < _currentQuestionInfo.Options.Length; i++)
-            options.Add(new KeyValuePair<int, string>(i, _currentQuestionInfo.Options[i]));
-        options.Shuffle();
 
-
-        foreach (KeyValuePair<int, string> option in options)
+        if (_currentQuestionInfo.UseSprites)
         {
-            CreateAnswerOption(option.Key, option.Value);
+            List<KeyValuePair<int, Sprite>> options = new List<KeyValuePair<int, Sprite>>();
+            for (int i = 0; i < _currentQuestionInfo.SpriteOptions.Length; i++)
+                options.Add(new KeyValuePair<int, Sprite>(i, _currentQuestionInfo.SpriteOptions[i]));
+            options.Shuffle();
+            _gridLayoutGroup.constraintCount = 2;
+            _gridLayoutGroup.cellSize = _sizeSprite;
+            foreach (KeyValuePair<int, Sprite> option in options)
+            {
+                CreateAnswerOption(option.Key, option.Value);
+            }
         }
+        else
+        {
+            List<KeyValuePair<int, string>> options = new List<KeyValuePair<int, string>>();
+            for (int i = 0; i < _currentQuestionInfo.Options.Length; i++)
+                options.Add(new KeyValuePair<int, string>(i, _currentQuestionInfo.Options[i]));
+            options.Shuffle();
+            _gridLayoutGroup.constraintCount = 1;
+            _gridLayoutGroup.cellSize = _sizeText;
+            foreach (KeyValuePair<int, string> option in options)
+            {
+                CreateAnswerOption(option.Key, option.Value);
+            }
+        }
+
 
         _isOpened = true;
     }
@@ -100,6 +121,13 @@ public class QuestWindow : MonoBehaviour
     {
         QuizToggle toggle = Instantiate(_togglePrefab, _answerOptionsContainer.transform);
         toggle.Init(answerText, index);
+        toggle.OnClick.AddListener(SubmitAnswer);
+    }
+
+    private void CreateAnswerOption(int index, Sprite sprite)
+    {
+        QuizToggle toggle = Instantiate(_togglePrefab, _answerOptionsContainer.transform);
+        toggle.Init(sprite, index);
         toggle.OnClick.AddListener(SubmitAnswer);
     }
 
